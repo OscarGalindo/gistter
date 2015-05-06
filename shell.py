@@ -6,6 +6,5 @@ from pprint import pprint
 
 from flask import *
 from gistter import *
-from gistter.models import *
 
 os.environ['PYTHONINSPECT'] = 'True'

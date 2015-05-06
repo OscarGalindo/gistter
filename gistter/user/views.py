@@ -1,8 +1,20 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, session, g
+
 from gistter import mongo
-from ..models import User
+from .models import User
+
 
 user = Blueprint('user', __name__, url_prefix='/user')
+
+
+@user.before_request
+def before_request():
+    """
+    Guarda el usuario en el objeto g si es que existe en session
+    """
+    g.user = None
+    if 'user_id' in session:
+        g.user = mongo.User.find_one({'_id': session['user_id']})
 
 
 @user.route('/<username>')

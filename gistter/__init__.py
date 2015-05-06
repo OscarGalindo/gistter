@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 import mongokit
 
 app = Flask(__name__)
@@ -6,8 +6,7 @@ app.config.from_object('config')
 
 mongo = mongokit.Connection()
 
-from .user.user import user
-
+from .user.views import user
 app.register_blueprint(user)
 
 
