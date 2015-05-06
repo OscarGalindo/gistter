@@ -1,4 +1,6 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
+from gistter import mongo
+from ..models import User
 
 user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -9,7 +11,11 @@ def index(username=None):
     if username is None:
         return 'Profile'
     else:
-        return 'Profile %s' % username
+        userobject = mongo.User.find_one({'username': username})
+        if userobject is None:
+            return 'User %s not found' % username, 404
+        else:
+            return userobject.to_json()
 
 
 @user.route('/<username>/edit')
