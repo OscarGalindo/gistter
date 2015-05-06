@@ -9,6 +9,6 @@ SECRET_KEY = "n1a0Ma1iHJcgb6QTi4uyj3HYCwokV2P6"
 
 
 # MongoEngine Configuration
-MONGODB_DBNAME = 'gistter'
+MONGODB_DATABASE = 'gistter'
 MONGODB_HOST = '127.0.0.1'
 MONGODB_PORT = 27017
