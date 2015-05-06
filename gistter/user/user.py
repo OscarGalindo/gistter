@@ -1,4 +1,5 @@
-from flask import Blueprint
+from flask import Blueprint, request
+from gistter import mongo
 
 user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -19,7 +20,8 @@ def edit(username):
 
 @user.route('/', methods=['POST'])
 def create():
-    return 'Created'
+    userdata = request.get_json()
+    return str(userdata)
 
 
 @user.route('/', methods=['PUT'])
