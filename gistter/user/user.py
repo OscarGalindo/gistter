@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from gistter import mongo
 
 user = Blueprint('user', __name__, url_prefix='/user')
 

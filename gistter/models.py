@@ -1,23 +1,26 @@
-import datetime
+from datetime import datetime
 from flask import url_for
-from gistter import db
+from flask.ext.mongokit import Document
+from gistter import mongo
 
 
-class User(db.Document):
-    created_at = db.DateTimeField(default=datetime.datetime.now, required=True)
-    username = db.StringField(max_length=255, required=True)
-    birth = db.StringField(max_length=255)
-    email = db.StringField(max_length=255, required=True)
-    password = db.StringField(max_length=255, required=True)
-    description = db.StringField(max_length=255)
-    tweets_count = db.IntField()
+class User(Document):
+    __collection__ = 'users'
+    structure = {
+        'username': unicode,
+        'birth': datetime,
+        'email': unicode,
+        'password': unicode,
+        'description': unicode,
+        'tweets_count': int,
+        'created_at': datetime
+    }
+
+    required_fields = ['username', 'email', 'password']
+    default_values = {'tweets_count': 0, 'created_at': datetime.utcnow}
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
 
-    meta = {
-        'collection': 'users',
-        'allow_inheritance': True,
-        'indexes': ['-created_at', 'username'],
-        'ordering': ['-created_at']
-    }
+
+mongo.register([User])
