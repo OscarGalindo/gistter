@@ -20,7 +20,11 @@ def index(username=None):
 
 @user.route('/<username>/edit')
 def edit(username):
-    return 'Form to edit %s profile' % username
+    userobject = mongo.User.find_one({'username': username})
+    if userobject is None:
+        return 'User %s not found' % username, 404
+    else:
+        return userobject.to_json()
 
 
 @user.route('/', methods=['POST'])
