@@ -23,6 +23,7 @@ class User(Document):
         'description': basestring,
         'tweets_count': int,
         'created_at': datetime,
+        'updated_at': datetime,
         'following_count': int,
         'followers_count': int,
         'following_users': list,
@@ -35,7 +36,8 @@ class User(Document):
         'following_count': 0,
         'following_users': [],
         'followers_users': [],
-        'created_at': datetime.utcnow
+        'created_at': datetime.utcnow,
+        'updated_at': datetime.utcnow
     }
 
     validators = {
@@ -45,28 +47,11 @@ class User(Document):
 
     required_fields = ['username', 'email', 'password']
     use_dot_notation = True
+    raise_validation_errors = False
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
 
-
-"""
-JSON Mongo Model User:
-    {
-        "_id" : ObjectId("5537cf8f3004a076b0069f0d"),
-        "username" : "oscarg",
-        "birth" : "15/10/1987",
-        "email" : "galindero@gmail.com",
-        "password" : "password",
-        "description" : "Intento de informático",
-        "tweets_count" : NumberInt(0),
-        "followers_count" : NumberInt(0),
-        "following_count" : NumberInt(0),
-        "following_users" : [
-
-        ],
-        "followers_users" : [
-
-        ]
-    }
-"""
+    def save(self, *args, **kwargs):
+        self.updated_at = datetime.utcnow()
+        super(User, self).save(*args, **kwargs)

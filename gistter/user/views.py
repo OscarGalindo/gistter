@@ -1,5 +1,7 @@
+from datetime import datetime
 from flask import Blueprint, request, session, g
 from bson import ObjectId
+from werkzeug.security import generate_password_hash
 
 from gistter import mongo
 from .models import User
@@ -42,8 +44,19 @@ def edit(username):
 
 @user.route('/', methods=['POST'])
 def create():
-    userdata = request.get_json()
-    return str(userdata)
+    data = request.get_json()
+    userdata = mongo.User()
+    userdata.username = data.get('username')
+    userdata.password = generate_password_hash(data.get('password'))
+    userdata.email = data.get('email')
+    if data.get('birth') is not None:
+        birth = datetime.strptime(data.get('birth'), '%Y-%m-%dT%H:%M:%S.%fZ')
+        userdata.birth = birth
+    if userdata.validate():
+        userdata.save()
+        return True
+    else:
+        return str(userdata.validation_errors)
 
 
 @user.route('/', methods=['PUT'])

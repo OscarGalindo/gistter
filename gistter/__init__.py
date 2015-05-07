@@ -1,4 +1,5 @@
 from flask import Flask
+from .user.models import User
 import mongokit
 
 app = Flask(__name__)
@@ -6,11 +7,9 @@ app.config.from_object('config')
 
 connection = mongokit.Connection()
 mongo = connection[app.config['MONGODB_DATABASE']]
-
-
-from .user.models import User
-from .user.views import user
 connection.register([User])
+
+from .user.views import user
 app.register_blueprint(user)
 
 
