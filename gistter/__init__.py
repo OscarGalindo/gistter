@@ -7,7 +7,10 @@ app.config.from_object('config')
 connection = mongokit.Connection()
 mongo = connection[app.config['MONGODB_DATABASE']]
 
+
+from .user.models import User
 from .user.views import user
+connection.register([User])
 app.register_blueprint(user)
 
 
