@@ -16,6 +16,7 @@ class User(Document):
     __database__ = 'gistter'
     __collection__ = 'users'
     structure = {
+        '_id': basestring,
         'username': basestring,
         'birth': datetime,
         'email': basestring,

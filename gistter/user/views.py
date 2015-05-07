@@ -1,4 +1,5 @@
 from flask import Blueprint, request, session, g
+from bson import ObjectId
 
 from gistter import mongo
 from .models import User
@@ -14,7 +15,7 @@ def before_request():
     """
     g.user = None
     if 'user_id' in session:
-        g.user = mongo.User.find_one({'_id': session['user_id']})
+        g.user = mongo.User.find_one({'_id': ObjectId(session['user_id'])})
 
 
 @user.route('/<username>')
