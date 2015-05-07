@@ -13,7 +13,6 @@ def email_validator(value):
 
 @mongo.register
 class User(Document):
-    __database__ = 'gistter'
     __collection__ = 'users'
     structure = {
         '_id': basestring,

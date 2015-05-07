@@ -4,7 +4,8 @@ import mongokit
 app = Flask(__name__)
 app.config.from_object('config')
 
-mongo = mongokit.Connection()
+connection = mongokit.Connection()
+mongo = connection[app.config['MONGODB_DATABASE']]
 
 from .user.views import user
 app.register_blueprint(user)
