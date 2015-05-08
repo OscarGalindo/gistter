@@ -1,13 +1,41 @@
-from datetime import datetime
-from flask import Blueprint, request, session, g
+from datetime import datetime, timedelta
+from flask import Blueprint, request, session, g, jsonify
 from bson import ObjectId
-from werkzeug.security import generate_password_hash
-
-from gistter import mongo
+from flask.ext.jwt import jwt_required
+from werkzeug.security import check_password_hash
 from .models import User
+from gistter import mongo, jwt, app
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
+
+
+@jwt.payload_handler
+def make_payload(userdata):
+    return {
+        'username': userdata.username,
+        'email': userdata.email
+    }
+
+
+@jwt.user_handler
+def load_user(payload):
+    if payload['username']:
+        return mongo.User.find_one({"username": payload['username']})
+
+
+@jwt.authentication_handler
+def authenticate(username, password):
+    userdata = mongo.User.find_one({"username": username})
+    if userdata is not None and check_password_hash(userdata.password, password):
+        return userdata
+
+
+
+# @user.route('/protected')
+# @jwt_required()
+# def protected():
+#     return 'Success!'
 
 
 @user.before_request
@@ -47,16 +75,20 @@ def create():
     data = request.get_json()
     userdata = mongo.User()
     userdata.username = data.get('username')
-    userdata.password = generate_password_hash(data.get('password'))
+    userdata.password = data.get('password')
     userdata.email = data.get('email')
+
     if data.get('birth') is not None:
         birth = datetime.strptime(data.get('birth'), '%Y-%m-%dT%H:%M:%S.%fZ')
         userdata.birth = birth
-    if userdata.validate():
-        userdata.save()
-        return True
-    else:
+
+    userdata.validate()
+
+    if userdata.validation_errors:
         return str(userdata.validation_errors)
+
+    userdata.save()
+    return jsonify({'username': userdata.username})
 
 
 @user.route('/', methods=['PUT'])

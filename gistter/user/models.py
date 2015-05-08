@@ -1,15 +1,14 @@
 from datetime import datetime
+import json
 from flask import url_for
-from mongokit import Document, ValidationError
+from flask.ext.mongokit import Document
 import re
+from werkzeug.security import generate_password_hash
 
 
 def email_validator(value):
     email = re.compile(r'(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)', re.IGNORECASE)
-    if not bool(email.match(value)):
-        raise ValidationError('%s is not a valid email: ' % value)
-    else:
-        return True
+    return bool(email.match(value))
 
 
 class User(Document):
@@ -42,7 +41,8 @@ class User(Document):
 
     validators = {
         'email': email_validator,
-        'birth': lambda x: type(x) == datetime
+        'birth': lambda x: type(x) == datetime,
+        'password': lambda x: len(x) >= 3
     }
 
     required_fields = ['username', 'email', 'password']
@@ -54,4 +54,8 @@ class User(Document):
 
     def save(self, *args, **kwargs):
         self.updated_at = datetime.utcnow()
+        self.password = generate_password_hash(self.password)
         super(User, self).save(*args, **kwargs)
+
+    def getuser(self):
+        return self

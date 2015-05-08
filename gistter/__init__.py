@@ -1,13 +1,14 @@
 from flask import Flask
+from flask.ext.jwt import JWT
 from .user.models import User
-import mongokit
+from flask.ext.mongokit import MongoKit
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-connection = mongokit.Connection()
-mongo = connection[app.config['MONGODB_DATABASE']]
-connection.register([User])
+mongo = MongoKit(app)
+jwt = JWT(app)
+mongo.register([User])
 
 from .user.views import user
 app.register_blueprint(user)
