@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
+from flask.ext.jwt import jwt_required
 from .models import User
 from gistter import mongo
 
@@ -21,6 +22,7 @@ def index(username=None):
 
 
 @user.route('/<username>/edit')
+@jwt_required()
 def edit(username):
     userobject = mongo.User.find_one({'username': username})
     if userobject is None:
@@ -51,10 +53,12 @@ def create():
 
 
 @user.route('/', methods=['PUT'])
+@jwt_required()
 def update():
     return 'Updated'
 
 
 @user.route('/<username>', methods=['DELETE'])
+@jwt_required()
 def delete(username):
     return 'Deleted %s' % username

@@ -1,10 +1,9 @@
 from datetime import datetime
-import json
 from flask import url_for
 from flask.ext.mongokit import Document
 import re
 from werkzeug.security import generate_password_hash
-
+from gistter import mongo
 
 def email_validator(value):
     email = re.compile(r'(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)', re.IGNORECASE)
@@ -55,7 +54,11 @@ class User(Document):
     def save(self, *args, **kwargs):
         self.updated_at = datetime.utcnow()
         self.password = generate_password_hash(self.password)
-        super(User, self).save(*args, **kwargs)
+        user = mongo.User.find_one({"$or": [{"username": self.username}, {"email": self.email}]})
+        if not user:
+            super(User, self).save(*args, **kwargs)
+            # user = self.mongo.User(url=url, discoverer=self.user_id)
+            # user.save()
 
-    def getuser(self):
-        return self
+    def find_by_username(self, username):
+        return self.find_one({username: username})
