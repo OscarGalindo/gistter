@@ -78,6 +78,11 @@ class User(Document):
     use_dot_notation = True
     raise_validation_errors = False
 
+    def bind(self, data):
+        self.username = data.get('username')
+        self.password = data.get('password')
+        self.email = data.get('email')
+
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
 

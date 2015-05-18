@@ -33,10 +33,7 @@ def edit(username):
 def create():
     data = request.get_json()
     userdata = mongo.User()
-    userdata.username = data.get('username')
-    userdata.password = data.get('password')
-    userdata.email = data.get('email')
-
+    userdata.bind(data)
     userdata.validate()
 
     if userdata.validation_errors:
@@ -46,7 +43,7 @@ def create():
         return jsonify({'errors': errors})
 
     userdata.save()
-    return jsonify({'username': userdata.username})
+    return jsonify({'success': True})
 
 
 @user.route('/', methods=['PUT'])
