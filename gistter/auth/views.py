@@ -1,4 +1,5 @@
-from flask import Blueprint
+from datetime import timedelta, datetime
+from flask import Blueprint, jsonify
 from werkzeug.security import check_password_hash
 from ..user.models import User
 from gistter import mongo, jwt
@@ -31,6 +32,19 @@ def make_payload(userdata):
         'username': userdata.username,
         'email': userdata.email
     }
+
+
+@jwt.error_handler
+def error_handler(e):
+    """
+    Respuesta en caso de error
+    :param e:
+    :return Json:
+    """
+    return jsonify(dict([
+        ('status_code', e.status_code),
+        ('description', e.description),
+    ])), 200, e.headers
 
 
 @jwt.user_handler

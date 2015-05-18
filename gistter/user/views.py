@@ -1,11 +1,9 @@
-from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask.ext.jwt import jwt_required
-from .models import User
 from gistter import mongo
 
 
-user = Blueprint('user', __name__, url_prefix='/user')
+user = Blueprint('user', __name__)
 
 
 @user.route('/<username>')
@@ -39,14 +37,13 @@ def create():
     userdata.password = data.get('password')
     userdata.email = data.get('email')
 
-    if data.get('birth') is not None:
-        birth = datetime.strptime(data.get('birth'), '%Y-%m-%dT%H:%M:%S.%fZ')
-        userdata.birth = birth
-
     userdata.validate()
 
     if userdata.validation_errors:
-        return str(userdata.validation_errors)
+        errors = {}
+        for field in userdata.validation_errors:
+            errors.update({field: userdata.validation_errors[field][0].message})
+        return jsonify({'errors': errors})
 
     userdata.save()
     return jsonify({'username': userdata.username})
