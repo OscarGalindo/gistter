@@ -14,7 +14,7 @@ def index(username=None):
     else:
         userobject = mongo.User.find_one({'username': username})
         if userobject is None:
-            return 'User %s not found' % username, 404
+            return 'User {username} not found'.format(username=username), 404
         else:
             return userobject.to_json()
 
@@ -24,9 +24,9 @@ def index(username=None):
 def edit(username):
     userobject = mongo.User.find_one({'username': username})
     if userobject is None:
-        return 'User %s not found' % username, 404
+        return 'User {username} not found'.format(username=username), 404
     else:
-        return userobject.to_json()
+        return jsonify(userobject)
 
 
 @user.route('/', methods=['POST'])
