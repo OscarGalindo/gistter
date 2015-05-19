@@ -10,7 +10,7 @@ tweet = Blueprint('tweet', __name__)
 def index(tweet_id):
     tweet_data = mongo.Tweet.get_from_id(tweet_id)
     if tweet_data is None:
-        return '{tweet_id} not found'.format(tweet_id=tweet_data), 404
+        return jsonify({'errors': 'Tweet not found'})
     else:
         return tweet_data.to_json()
 
