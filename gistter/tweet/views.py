@@ -12,7 +12,7 @@ def index(tweet_id):
     if tweet_data is None:
         return '{tweet_id} not found'.format(tweet_id=tweet_data), 404
     else:
-        return tweet.to_json()
+        return tweet_data.to_json()
 
 
 @tweet.route('/', methods=['POST'])
