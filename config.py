@@ -8,6 +8,7 @@ DEBUG = True
 BCRYPT_LEVEL = 12
 SECRET_KEY = "n1a0Ma1iHJcgb6QTi4uyj3HYCwokV2P6"
 
+JWT_EXPIRATION_DELTA = timedelta(minutes=60)
 
 # MongoEngine Configuration
 MONGODB_DATABASE = 'gistter'
