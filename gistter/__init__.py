@@ -26,7 +26,9 @@ def create_app():
 (app, mongo, jwt, cors) = create_app()
 
 from .user.views import user as user_blueprint
+from .tweet.views import tweet as tweet_blueprint
 from .auth.views import auth as auth_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/user")
+app.register_blueprint(tweet_blueprint, url_prefix="/tweet")
 app.register_blueprint(auth_blueprint)
