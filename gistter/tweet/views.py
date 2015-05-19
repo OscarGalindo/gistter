@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask.ext.jwt import jwt_required
+from flask.ext.jwt import jwt_required, current_user
 from gistter import mongo
 
 
@@ -19,17 +19,18 @@ def index(tweet_id):
 @jwt_required()
 def create():
     data = request.get_json()
-    userdata = mongo.User()
-    userdata.bind(data)
-    userdata.validate()
+    data['user'] = current_user._get_current_object()
+    tweetdata = mongo.Tweet()
+    tweetdata.bind(data)
+    tweetdata.validate()
 
-    if userdata.validation_errors:
+    if tweetdata.validation_errors:
         errors = {}
-        for field in userdata.validation_errors:
-            errors.update({field: userdata.validation_errors[field][0].message})
+        for field in tweetdata.validation_errors:
+            errors.update({field: tweetdata.validation_errors[field][0].message})
         return jsonify({'errors': errors})
 
-    userdata.save()
+    tweetdata.save()
     return jsonify({'success': True})
 
 

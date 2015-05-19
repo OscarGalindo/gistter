@@ -15,7 +15,7 @@ class Tweet(Core):
         'retweet': bool,
         'favorites_count': int,
         'retweet_count': int,
-        'hashtags': [basestring],
+        'hashtags': [unicode],
     }
 
     default_values = {
@@ -34,12 +34,12 @@ class Tweet(Core):
     skip_validation = False
 
     def bind(self, data):
-        self.user = mongo.User.find_one({'username': data.get('username')})
+        self.user = data.get('user')
         self.body = data.get('body')
         self.body_html = data.get('body')
-        self.hashtags = set([re.sub(r"#+", "#", k) for k in set(
+        self.hashtags = [re.sub(r"#+", "#", k) for k in set(
             [re.sub(r"(\W+)$", "", j, flags=re.UNICODE) for j in
-             set([i for i in data.get('body').split() if i.startswith("#")])])])
+             [i for i in data.get('body').split() if i.startswith("#")]])]
 
     def get_absolute_url(self):
         return url_for('tweet.index', kwargs={"id": self.username})
