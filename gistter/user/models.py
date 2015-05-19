@@ -1,10 +1,10 @@
 from datetime import datetime
 from flask import url_for
-from flask.ext.mongokit import Document
 import re
 from mongokit import ValidationError
 from werkzeug.security import generate_password_hash
 from gistter import mongo
+from gistter.coremodel import Core
 
 
 def email_validator(value):
@@ -29,8 +29,7 @@ def unique_username(username):
 
 
 @mongo.register
-class User(Document):
-    __database__ = 'gistter'
+class User(Core):
     __collection__ = 'users'
     structure = {
         'username': basestring,
@@ -39,8 +38,6 @@ class User(Document):
         'password': basestring,
         'description': basestring,
         'tweets_count': int,
-        'created_at': datetime,
-        'updated_at': datetime,
         'following_count': int,
         'followers_count': int,
         'following_users': list,
@@ -52,9 +49,7 @@ class User(Document):
         'followers_count': 0,
         'following_count': 0,
         'following_users': [],
-        'followers_users': [],
-        'created_at': datetime.utcnow,
-        'updated_at': datetime.utcnow
+        'followers_users': []
     }
 
     validators = {
@@ -68,15 +63,10 @@ class User(Document):
         {
             'fields': ['username', 'email'],
             'unique': True
-        },
-        {
-            'fields': ('created_at', -1),
         }
     ]
 
     required_fields = ['username', 'email', 'password']
-    use_dot_notation = True
-    raise_validation_errors = False
 
     def bind(self, data):
         self.username = data.get('username')
@@ -87,7 +77,6 @@ class User(Document):
         return url_for('user.index', kwargs={"username": self.username})
 
     def save(self, *args, **kwargs):
-        self.updated_at = datetime.utcnow()
         self.password = generate_password_hash(self.password)
         super(User, self).save()
 
