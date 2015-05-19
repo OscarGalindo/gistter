@@ -1,5 +1,4 @@
 import re
-import uuid
 from flask import url_for
 from gistter import mongo
 from gistter.coremodel import Core
@@ -8,11 +7,10 @@ from gistter.user.models import User
 
 @mongo.register
 class Tweet(Core):
-    __collection__ = 'users'
+    __collection__ = 'tweets'
     structure = {
         'user': User,
         'user_rt': User,
-        'reply_to': uuid.UUID,
         'body': basestring,
         'retweet': bool,
         'favorites_count': int,
@@ -33,6 +31,7 @@ class Tweet(Core):
 
     required_fields = ['user', 'body']
     use_autorefs = True
+    skip_validation = False
 
     def bind(self, data):
         self.user = mongo.User.find_one({'username': data.get('username')})

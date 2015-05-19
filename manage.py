@@ -5,7 +5,7 @@ import os
 
 
 def _make_context():
-    return dict(app=app, db=mongo)
+    return dict(app=app, mongo=mongo)
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

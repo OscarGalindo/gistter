@@ -1,7 +1,5 @@
-from datetime import timedelta, datetime
 from flask import Blueprint, jsonify
 from werkzeug.security import check_password_hash
-from ..user.models import User
 from gistter import mongo, jwt
 
 
