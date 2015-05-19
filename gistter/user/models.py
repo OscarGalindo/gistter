@@ -70,15 +70,11 @@ class User(Core):
 
     def bind(self, data):
         self.username = data.get('username')
-        self.password = data.get('password')
+        self.password = generate_password_hash(data.get('password'))
         self.email = data.get('email')
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
-
-    def save(self, *args, **kwargs):
-        self.password = generate_password_hash(self.password)
-        super(User, self).save()
 
     def find_by_username(self, username):
         return self.find_one({username: username})

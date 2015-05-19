@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
-from flask.ext.jwt import jwt_required
+from flask.ext.jwt import jwt_required, current_user
 from gistter import mongo
+from gistter.user.models import User
 
 
 user = Blueprint('user', __name__)
 
 
 @user.route('/<username>')
-@user.route('/')
 def index(username=None):
     if username is None:
         return 'Profile'
@@ -17,6 +17,14 @@ def index(username=None):
             return jsonify({'errors': 'User <strong>{username}</strong> not found'.format(username=username)})
         else:
             return userobject.to_json()
+
+
+@user.route('/')
+@jwt_required
+def me():
+    medata = current_user._get_current_object()
+    if isinstance(medata, User):
+        return medata.to_json()
 
 
 @user.route('/<username>/edit')
