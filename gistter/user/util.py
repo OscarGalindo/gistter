@@ -1,0 +1,14 @@
+from flask import abort
+from werkzeug.routing import BaseConverter
+from gistter import mongo
+
+
+class UserConverter(BaseConverter):
+    def to_python(self, username):
+        user = mongo.User.find_one({'username': username})
+        if user is None:
+            return abort(404)
+        return user
+
+    def to_url(self, username):
+        return username.username
