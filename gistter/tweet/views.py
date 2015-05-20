@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify
-from flask.ext.jwt import jwt_required, current_user
+from flask import Blueprint, request, jsonify, g
+from flask.ext.jwt import jwt_required
 from gistter import mongo
 
 
@@ -19,7 +19,7 @@ def index(tweet_id):
 @jwt_required()
 def create():
     data = request.get_json()
-    data['user'] = current_user._get_current_object()
+    data['user'] = g.user
     tweetdata = mongo.Tweet()
     tweetdata.bind(data)
     tweetdata.validate()

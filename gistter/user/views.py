@@ -1,30 +1,26 @@
-from flask import Blueprint, request, jsonify
-from flask.ext.jwt import jwt_required, current_user
+from flask import Blueprint, request, jsonify, abort
+from flask.ext.jwt import jwt_required, current_user, verify_jwt, JWTError
 from gistter import mongo
-from gistter.user.models import User
-
 
 user = Blueprint('user', __name__)
 
 
 @user.route('/<username>')
+@user.route('/')
 def index(username=None):
     if username is None:
-        return 'Profile'
+        try:
+            verify_jwt()
+            if current_user is not None:
+                return current_user.to_json()
+        except JWTError:
+            abort(404)
     else:
         userobject = mongo.User.find_one({'username': username})
         if userobject is None:
             return jsonify({'errors': 'User <strong>{username}</strong> not found'.format(username=username)})
         else:
             return userobject.to_json()
-
-
-@user.route('/')
-@jwt_required
-def me():
-    medata = current_user._get_current_object()
-    if isinstance(medata, User):
-        return medata.to_json()
 
 
 @user.route('/<username>/edit')
