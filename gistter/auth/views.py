@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, g
 from werkzeug.security import check_password_hash
 from gistter import mongo, jwt
 
@@ -53,5 +53,6 @@ def load_user(payload):
     :return User:
     """
     if payload['username']:
-        return mongo.User.find_one({"username": payload['username']})
+        g.user = mongo.User.find_one({"username": payload['username']})
+        return g.user
 
