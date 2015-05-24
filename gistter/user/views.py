@@ -12,18 +12,13 @@ def profile():
 
 @user.route('/<string:userobj>')
 def index(userobj):
-    user = mongo.User.find_one({'username': userobj})
-    return user.to_json() if not None else abort(404)
+    return mongo.User.find_one_or_404({'username': userobj}).to_json()
 
 
-@user.route('/<username>/edit')
+@user.route('/<userobj>/edit')
 @jwt_required()
-def edit(username):
-    userobject = mongo.User.find_one({'username': username})
-    if userobject is None:
-        return jsonify({'errors': 'User <strong>{username}</strong> not found'.format(username=username)})
-    else:
-        return jsonify(userobject)
+def edit(userobj):
+    return mongo.User.find_one_or_404({'username': userobj}).to_json()
 
 
 @user.route('/', methods=['POST'])

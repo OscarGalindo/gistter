@@ -1,8 +1,8 @@
 from datetime import datetime
-import mongokit
+from flask_mongokit import Document
 
 
-class Core(mongokit.Document):
+class Core(Document):
     __database__ = "gistter"
     use_dot_notation = True
     raise_validation_errors = False
