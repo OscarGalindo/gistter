@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, g, make_response, abort
 from flask.ext.jwt import jwt_required
-from gistter import mongo
+from .. import mongo
+from .models import User
 
 user = Blueprint('user', __name__)
 

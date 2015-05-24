@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, g
 from flask.ext.jwt import jwt_required
 from gistter import mongo
+from .models import Tweet
 
 
 tweet = Blueprint('tweet', __name__)

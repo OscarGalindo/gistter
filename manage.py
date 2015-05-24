@@ -1,15 +1,14 @@
 from flask.ext.script import Manager, Server, Shell
-from gistter import app, mongo
+from gistter import create_app
 import sys
 import os
 
-
 def _make_context():
-    return dict(app=app, mongo=mongo)
-
+    return dict(app=app)
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+app = create_app()
 manager = Manager(app)
 
 manager.add_command("runserver", Server(
