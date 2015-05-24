@@ -78,3 +78,9 @@ class User(Core):
 
     def find_by_username(self, username):
         return self.find_one({username: username})
+
+    def data(self):
+        user = self
+        user['_id'] = str(user['_id'])
+        del user['password']
+        return user

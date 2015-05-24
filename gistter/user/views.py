@@ -12,13 +12,13 @@ def profile():
 
 @user.route('/<string:userobj>')
 def index(userobj):
-    return mongo.User.find_one_or_404({'username': userobj}).to_json()
+    return jsonify(mongo.User.find_one_or_404({'username': userobj}).data())
 
 
 @user.route('/<userobj>/edit')
 @jwt_required()
 def edit(userobj):
-    return mongo.User.find_one_or_404({'username': userobj}).to_json()
+    return jsonify(mongo.User.find_one_or_404({'username': userobj}).data())
 
 
 @user.route('/', methods=['POST'])
