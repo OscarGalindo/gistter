@@ -42,7 +42,7 @@ def error_handler(e):
     return jsonify(dict([
         ('status_code', e.status_code),
         ('description', e.description),
-    ])), 200, e.headers
+    ])), 400, e.headers
 
 
 @jwt.user_handler

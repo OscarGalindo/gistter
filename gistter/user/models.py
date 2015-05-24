@@ -10,21 +10,21 @@ from gistter.coremodel import Core
 def email_validator(value):
     email = re.compile(r'(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)', re.IGNORECASE)
     if not bool(email.match(value)):
-        raise ValidationError('%s is not a valid email.'.format(email))
+        raise ValidationError("%s is not a valid email.".format(email))
     return True
 
 
 def unique_email(email):
     user = mongo.User.find_one({"email": email})
     if bool(user):
-        raise ValidationError('%s already exists.'.format(email))
+        raise ValidationError("Email already exists.")
     return True
 
 
 def unique_username(username):
     user = mongo.User.find_one({"username": username})
     if bool(user):
-        raise ValidationError('%s already exists.'.format(username))
+        raise ValidationError("Username already exists.")
     return True
 
 

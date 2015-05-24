@@ -6,9 +6,7 @@ from gistter import mongo
 class UserConverter(BaseConverter):
     def to_python(self, username):
         user = mongo.User.find_one({'username': username})
-        if user is None:
-            return abort(404)
-        return user
+        return user if not None else abort(404)
 
     def to_url(self, username):
         return username.username

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, g
+from flask import Blueprint, request, jsonify, g, make_response
 from flask.ext.jwt import jwt_required
 from gistter import mongo
 
@@ -10,13 +10,9 @@ user = Blueprint('user', __name__)
 def profile():
     return g.user.to_json()
 
-@user.route('/<User:username>')
-def index(username):
-    userobject = mongo.User.find_one({'username': username})
-    if userobject is None:
-        return jsonify({'errors': 'User <strong>{username}</strong> not found'.format(username=username)})
-    else:
-        return userobject.to_json()
+@user.route('/<User:userobj>')
+def index(userobj):
+    return userobj.to_json()
 
 
 @user.route('/<username>/edit')
@@ -40,7 +36,7 @@ def create():
         errors = {}
         for field in userdata.validation_errors:
             errors.update({field: userdata.validation_errors[field][0].message})
-        return jsonify({'errors': errors})
+        return make_response(jsonify({'errors': errors}), 409)
 
     userdata.save()
     return jsonify({'success': True})
