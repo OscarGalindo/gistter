@@ -25,10 +25,10 @@ def create_app():
 
     @app.errorhandler(404)
     def not_found(error):
-        return "<h1>%s</h1>" % error
+        return "<h1>%s</h1>" % error, 404
 
     @app.errorhandler(500)
     def internal_error(exception):
-        return "<h1>%s</h1>" % exception
+        return "<h1>%s</h1>" % exception, 500
 
     return app
