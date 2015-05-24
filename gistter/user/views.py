@@ -1,18 +1,18 @@
-from flask import Blueprint, request, jsonify, g, make_response
+from flask import Blueprint, request, jsonify, g, make_response, abort
 from flask.ext.jwt import jwt_required
 from gistter import mongo
 
 user = Blueprint('user', __name__)
-
 
 @user.route('/')
 @jwt_required()
 def profile():
     return g.user.to_json()
 
-@user.route('/<User:userobj>')
+@user.route('/<string:userobj>')
 def index(userobj):
-    return userobj.to_json()
+    user = mongo.User.find_one({'username': userobj})
+    return user.to_json() if not None else abort(404)
 
 
 @user.route('/<username>/edit')
