@@ -17,14 +17,14 @@ def email_validator(value):
 def unique_email(email):
     user = mongo.User.find_one({"email": email})
     if bool(user):
-        raise ValidationError("Email already exists.")
+        raise ValidationError("%s already exists.".format(email))
     return True
 
 
 def unique_username(username):
     user = mongo.User.find_one({"username": username})
     if bool(user):
-        raise ValidationError("Username already exists.")
+        raise ValidationError("%s already exists.".format(username))
     return True
 
 
