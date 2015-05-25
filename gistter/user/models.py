@@ -61,6 +61,8 @@ class User(Core):
         'email': [email_validator, unique_email],
         'birth': lambda x: type(x) == datetime,
         'password': lambda x: len(x) >= 3,
+        'name': lambda x: len(x) >= 1,
+        'lastname': lambda x: len(x) >= 1,
         'username': unique_username
     }
 
@@ -77,6 +79,9 @@ class User(Core):
         self.username = data.get('username')
         self.password = generate_password_hash(data.get('password'))
         self.email = data.get('email')
+        self.name = data.get('name')
+        self.lastname = data.get('lastname')
+        self.fullname = '{name} {lastname}'.format(name=self.name, lastname=self.lastname)
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
