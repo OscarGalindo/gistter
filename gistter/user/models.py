@@ -34,6 +34,9 @@ class User(Core):
     structure = {
         'username': basestring,
         'birth': datetime,
+        'name': basestring,
+        'lastname': basestring,
+        'city': basestring,
         'email': basestring,
         'password': basestring,
         'description': basestring,
@@ -41,7 +44,8 @@ class User(Core):
         'following_count': int,
         'followers_count': int,
         'following_users': list,
-        'followers_users': list
+        'followers_users': list,
+        'favorites': list
     }
 
     default_values = {
@@ -49,7 +53,8 @@ class User(Core):
         'followers_count': 0,
         'following_count': 0,
         'following_users': [],
-        'followers_users': []
+        'followers_users': [],
+        'favorites': []
     }
 
     validators = {
