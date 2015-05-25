@@ -18,9 +18,11 @@ def create_app():
     from .user.views import user as user_blueprint
     from .tweet.views import tweet as tweet_blueprint
     from .auth.views import auth as auth_blueprint
+    from .timeline.views import timeline as timeline_blueprint
 
     app.register_blueprint(user_blueprint, url_prefix="/user")
     app.register_blueprint(tweet_blueprint, url_prefix="/tweet")
+    app.register_blueprint(timeline_blueprint, url_prefix="/timeline")
     app.register_blueprint(auth_blueprint)
 
     @app.errorhandler(404)
