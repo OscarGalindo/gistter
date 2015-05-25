@@ -9,5 +9,11 @@ timeline = Blueprint('timeline', __name__)
 @timeline.route('/')
 @jwt_required()
 def index():
-    tweets = mongo.Tweet.find({'user.$id': {'$in': g.user.following_users}})
-    return jsonify([x.data for x in tweets])
+
+    tweets = mongo.Tweet.find({
+        '$or' : [
+            {'user.$id': { '$in': g.user.following_users} },
+            {'user.$id': g.user._id}
+        ]
+    })
+    return jsonify([x.data() for x in tweets])
