@@ -53,5 +53,5 @@ class Tweet(Core):
     def data(self):
         tweet = self
         tweet['_id'] = str(tweet['_id'])
-        del tweet['user']
+        tweet['user'] = self.user.data()
         return tweet
