@@ -51,6 +51,7 @@ class Tweet(Core):
         return url_for('tweet.index', kwargs={"id": self.username})
 
     def data(self):
-        user = self
-        user['_id'] = str(user['_id'])
-        return user
+        tweet = self
+        tweet['_id'] = str(tweet['_id'])
+        del tweet['user']
+        return tweet
