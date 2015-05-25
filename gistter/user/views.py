@@ -1,3 +1,4 @@
+import bson
 from flask import Blueprint, request, jsonify, g, make_response, abort
 from flask.ext.jwt import jwt_required
 from .. import mongo
@@ -12,7 +13,13 @@ def profile():
 
 @user.route('/<string:userobj>')
 def index(userobj):
-    return jsonify(mongo.User.find_one_or_404({'username': userobj}).data())
+    userdata = mongo.User.find_one_or_404({'username': userobj}).data()
+    tweets = mongo.Tweet.find({"user.$id": bson.objectid.ObjectId(userdata['_id'])})
+    data = dict(
+        profile=userdata,
+        tweets=[x.data() for x in tweets]
+    )
+    return jsonify(data)
 
 
 @user.route('/<userobj>/edit')

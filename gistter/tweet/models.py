@@ -40,11 +40,17 @@ class Tweet(Core):
     def bind(self, data):
         self.user = data.get('user')
         self.body = data.get('body')
-        self.code = data.get('code')
-        self.code_html = highlight(data.get('code'), PythonLexer(), HtmlFormatter())
+        self.code = data.get('code', '')
+        self.code_html = highlight(data.get('code'), PythonLexer(), HtmlFormatter()) if len(self.code) > 0 else ''
+
         self.hashtags = [re.sub(r"#+", "#", k) for k in set(
             [re.sub(r"(\W+)$", "", j, flags=re.UNICODE) for j in
              [i for i in data.get('body').split() if i.startswith("#")]])]
 
     def get_absolute_url(self):
         return url_for('tweet.index', kwargs={"id": self.username})
+
+    def data(self):
+        user = self
+        user['_id'] = str(user['_id'])
+        return user
