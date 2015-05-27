@@ -1,5 +1,7 @@
 import re
+from bson import ObjectId
 from flask import url_for
+from mongokit import OR
 from gistter import mongo
 from gistter.coremodel import Core
 from gistter.user.models import User
@@ -20,6 +22,7 @@ class Tweet(Core):
         'favorites_count': int,
         'retweet_count': int,
         'hashtags': [unicode],
+        'response_to': OR(ObjectId, bool)
     }
 
     default_values = {
@@ -27,6 +30,7 @@ class Tweet(Core):
         'retweet_count': 0,
         'hashtags': [],
         'retweet': False,
+        'response_to': False
     }
 
     validators = {

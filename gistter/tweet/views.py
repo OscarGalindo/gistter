@@ -1,8 +1,9 @@
-from flask import Blueprint, request, jsonify, g
+from flask import Blueprint, request, jsonify, g, make_response
 from flask.ext.jwt import jwt_required
-from gistter import mongo
-from .models import Tweet
 
+from gistter import mongo
+from ..tweet.models import Tweet
+from bson.objectid import ObjectId
 
 tweet = Blueprint('tweet', __name__)
 
@@ -10,10 +11,12 @@ tweet = Blueprint('tweet', __name__)
 @tweet.route('/<ObjectId:tweet_id>')
 def index(tweet_id):
     tweet_data = mongo.Tweet.get_from_id(tweet_id)
+    childs = [x.data for x in mongo.Tweet.find({'response_of': ObjectId(tweet_id)})]
+    parents = []
     if tweet_data is None:
-        return jsonify({'errors': 'Tweet not found'})
+        return make_response(jsonify({'errors': 'Tweet not found'}), 404)
     else:
-        return tweet_data.to_json()
+        return jsonify(dict(tweet=tweet_data.data(), childs=childs, parents=parents))
 
 
 @tweet.route('/', methods=['POST'])
