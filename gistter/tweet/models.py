@@ -51,11 +51,14 @@ class Tweet(Core):
             [re.sub(r"(\W+)$", "", j, flags=re.UNICODE) for j in
              [i for i in data.get('body').split() if i.startswith("#")]])]
 
+        self.response_to = ObjectId(data.get('id_parent', False))
+
     def get_absolute_url(self):
         return url_for('tweet.index', kwargs={"id": self.username})
 
     def data(self):
         tweet = self
         tweet['_id'] = str(tweet['_id'])
+        tweet['response_to'] = str(tweet['response_to']) if 'response_to' in tweet else False
         tweet['user'] = self.user.data()
         return tweet

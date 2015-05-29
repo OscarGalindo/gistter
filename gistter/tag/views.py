@@ -13,6 +13,7 @@ def index(hashtag):
         return make_response(jsonify({'errors': 'No tweets with that tag.'}), 404)
     else:
         data = dict(
-            tweets=[x.data() for x in tweets]
+            tweets=[x.data() for x in tweets],
+            hashtag=hashtag
         )
         return jsonify(data)

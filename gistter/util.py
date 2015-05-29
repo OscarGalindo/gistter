@@ -1,7 +1,7 @@
 from werkzeug.routing import BaseConverter
 
-class HashtagConverter(BaseConverter):
 
+class HashtagConverter(BaseConverter):
     def to_python(self, value):
         return '#' + value
 
