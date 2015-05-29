@@ -10,13 +10,14 @@ tweet = Blueprint('tweet', __name__)
 
 @tweet.route('/<ObjectId:tweet_id>')
 def index(tweet_id):
-    tweet_data = mongo.Tweet.get_from_id(tweet_id)
-    childs = [x.data for x in mongo.Tweet.find({'response_of': ObjectId(tweet_id)})]
+    response = dict()
+    response.update(tweet=mongo.Tweet.get_from_id(tweet_id))
+    response.update(childs=[x.data() for x in mongo.Tweet.find({'response_to': tweet_id})])
     parents = []
-    if tweet_data is None:
+    if response.get('tweet') is None:
         return make_response(jsonify({'errors': 'Tweet not found'}), 404)
     else:
-        return jsonify(dict(tweet=tweet_data.data(), childs=childs, parents=parents))
+        return jsonify(response)
 
 
 @tweet.route('/', methods=['POST'])

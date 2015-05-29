@@ -46,12 +46,11 @@ class Tweet(Core):
         self.body = data.get('body')
         self.code = data.get('code', '')
         self.code_html = highlight(data.get('code'), PythonLexer(), HtmlFormatter()) if len(self.code) > 0 else ''
+        self.response_to = ObjectId(data.get('id_parent', False))
 
         self.hashtags = [re.sub(r"#+", "#", k) for k in set(
             [re.sub(r"(\W+)$", "", j, flags=re.UNICODE) for j in
              [i for i in data.get('body').split() if i.startswith("#")]])]
-
-        self.response_to = ObjectId(data.get('id_parent', False))
 
     def get_absolute_url(self):
         return url_for('tweet.index', kwargs={"id": self.username})
@@ -59,6 +58,6 @@ class Tweet(Core):
     def data(self):
         tweet = self
         tweet['_id'] = str(tweet['_id'])
-        tweet['response_to'] = str(tweet['response_to']) if 'response_to' in tweet else False
+        tweet['response_to'] = str(tweet['response_to']) or False
         tweet['user'] = self.user.data()
         return tweet
