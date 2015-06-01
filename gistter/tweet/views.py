@@ -39,6 +39,12 @@ def create():
     return jsonify({'success': True})
 
 
-@tweet.route('/<tweet_id>', methods=['DELETE'])
+@tweet.route('/<ObjectId:tweet_id>', methods=['DELETE'])
+@jwt_required()
 def delete(tweet_id):
-    return 'Deleted {tweet_id}'.format(tweet_id=tweet_id)
+    t = mongo.Tweet.get_from_id(tweet_id)
+    if str(g.user._id) == str(t.user._id):
+        t.delete()
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Not the user of the tweet'})
