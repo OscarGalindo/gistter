@@ -58,6 +58,6 @@ class Tweet(Core):
     def data(self):
         tweet = self
         tweet['_id'] = str(tweet['_id'])
-        tweet['response_to'] = str(tweet['response_to']) or False
+        tweet['response_to'] = str(tweet.get('response_to', False))
         tweet['user'] = self.user.data()
         return tweet
