@@ -25,11 +25,13 @@ def create_app():
     from .auth.views import auth as auth_blueprint
     from .timeline.views import timeline as timeline_blueprint
     from .tag.views import tag as tag_blueprint
+    from .search.views import search as search_blueprint
 
     app.register_blueprint(user_blueprint, url_prefix="/user")
     app.register_blueprint(tweet_blueprint, url_prefix="/tweet")
     app.register_blueprint(timeline_blueprint, url_prefix="/timeline")
     app.register_blueprint(tag_blueprint, url_prefix="/tag")
+    app.register_blueprint(search_blueprint, url_prefix="/search")
     app.register_blueprint(auth_blueprint)
 
     @app.errorhandler(404)

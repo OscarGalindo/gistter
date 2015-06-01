@@ -46,7 +46,8 @@ class Tweet(Core):
         self.body = data.get('body')
         self.code = data.get('code', '')
         self.code_html = highlight(data.get('code'), PythonLexer(), HtmlFormatter()) if len(self.code) > 0 else ''
-        self.response_to = ObjectId(data.get('id_parent', False))
+        x = data.get('id_parent', False)
+        self.response_to = ObjectId(x) if x is not False else x
 
         self.hashtags = [re.sub(r"#+", "#", k) for k in set(
             [re.sub(r"(\W+)$", "", j, flags=re.UNICODE) for j in
