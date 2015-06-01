@@ -3,7 +3,7 @@ from flask import url_for
 import re
 from mongokit import ValidationError
 from werkzeug.security import generate_password_hash
-from gistter import mongo
+from gistter import mongo, gravatar
 from gistter.coremodel import Core
 
 
@@ -45,7 +45,8 @@ class User(Core):
         'followers_count': int,
         'following_users': list,
         'followers_users': list,
-        'favorites': list
+        'favorites': list,
+        'image_profile': basestring
     }
 
     default_values = {
@@ -78,10 +79,11 @@ class User(Core):
     def bind(self, data):
         self.username = data.get('username')
         self.password = generate_password_hash(data.get('password'))
-        self.email = data.get('email')
+        self.email = data.get('email').lower()
         self.name = data.get('name')
         self.lastname = data.get('lastname')
         self.fullname = '{name} {lastname}'.format(name=self.name, lastname=self.lastname)
+        self.image_profile = gravatar(self.email)
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})

@@ -1,4 +1,5 @@
 from flask import Flask
+from flask.ext.gravatar import Gravatar
 from flask.ext.mongokit import MongoKit
 from flask.ext.cors import CORS
 from flask.ext.jwt import JWT
@@ -6,6 +7,8 @@ from flask.ext.jwt import JWT
 mongo = MongoKit()
 jwt = JWT()
 cors = CORS()
+gravatar = Gravatar(size=100, rating='g', default='retro', force_default=False,
+                    force_lower=False, use_ssl=False, base_url=None)
 
 
 def create_app():
@@ -15,8 +18,10 @@ def create_app():
     mongo.init_app(app)  # Iniciamos la base de datos
     jwt.init_app(app)  # Iniciamos el servicio que nos ayudara a tratar los JWT
     cors.init_app(app)  # Iniciamos el servicio para controlar el CORS
+    gravatar.init_app(app)  # Iniciamos gravatar
 
     from .util import HashtagConverter  # Importamos URL Converter para Hashtag
+
     app.url_map.converters['hashtag'] = HashtagConverter  # Definimos el URL Converter para que Flask lo conozca
 
     # Importamos y registramos todos los blueprints de la aplicacion
