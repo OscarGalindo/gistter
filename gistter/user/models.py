@@ -46,7 +46,8 @@ class User(Core):
         'following_users': list,
         'followers_users': list,
         'favorites': list,
-        'image_profile': basestring
+        'image_profile': basestring,
+        'fullname': basestring
     }
 
     default_values = {
