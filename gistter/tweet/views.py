@@ -11,7 +11,7 @@ tweet = Blueprint('tweet', __name__)
 @tweet.route('/<ObjectId:tweet_id>')
 def index(tweet_id):
     response = dict()
-    response.update(tweet=mongo.Tweet.get_from_id(tweet_id))
+    response.update(tweet=mongo.Tweet.get_from_id(tweet_id).data())
     response.update(childs=[x.data() for x in mongo.Tweet.find({'response_to': tweet_id})])
     parents = []
     if response.get('tweet') is None:
