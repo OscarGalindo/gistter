@@ -28,7 +28,7 @@ def make_payload(userdata):
     """
     return {
         'username': userdata.username,
-        'email': userdata.email
+        'image_profile': userdata.image_profile
     }
 
 
