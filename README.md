@@ -1,4 +1,5 @@
-# Gistter
+# Gistter [![Build Status](https://travis-ci.org/kaseOga/gistter_frontend.svg)](https://travis-ci.org/kaseOga/gistter_frontend)
 ### by Naman y Oscar
 ------
 Python + Flask + MongoKIT
+
