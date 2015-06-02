@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, jsonify, g
 from werkzeug.security import check_password_hash
 from gistter import mongo, jwt
@@ -14,7 +15,7 @@ def authenticate(username, password):
     :param password:
     :return token:
     """
-    userdata = mongo.User.find_one({"username": username})
+    userdata = mongo.User.find_one({"username": {"$regex": re.compile(username, re.IGNORECASE)}})
     if userdata is not None and check_password_hash(userdata.password, password):
         return userdata
 
