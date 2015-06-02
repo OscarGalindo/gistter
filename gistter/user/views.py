@@ -1,3 +1,4 @@
+import re
 import bson
 from flask import Blueprint, request, jsonify, g, make_response, abort
 from flask.ext.jwt import jwt_required
@@ -13,7 +14,7 @@ def profile():
 
 @user.route('/<string:userobj>')
 def index(userobj):
-    userdata = mongo.User.find_one_or_404({'username': userobj}).data()
+    userdata = mongo.User.find_one_or_404({'username': {"$regex": re.compile(userobj, re.IGNORECASE)}}).data()
     tweets = mongo.Tweet.find({"user.$id": bson.objectid.ObjectId(userdata['_id'])})
     data = dict(
         profile=userdata,
