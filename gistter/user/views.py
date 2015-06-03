@@ -23,7 +23,7 @@ def index(userobj):
     return jsonify(data)
 
 
-@user.route('/<userobj>/edit')
+@user.route('/<string:userobj>/edit')
 @jwt_required()
 def edit(userobj):
     return jsonify(mongo.User.find_one_or_404({'username': userobj}).data())
@@ -52,7 +52,31 @@ def update():
     return 'Updated'
 
 
-@user.route('/<username>', methods=['DELETE'])
+@user.route('/<string:username>', methods=['DELETE'])
 @jwt_required()
 def delete(username):
     return 'Deleted %s' % username
+
+@user.route('/<string:username>/follow')
+@jwt_required
+def follow(username):
+    if g.user.username == username:
+        return jsonify({'error': 'User can\'t follow himself'})
+
+    datauser = mongo.User.find_one_or_404({'username': username})
+    g.user.add_follower(datauser._id)
+    datauser.add_following(datauser._id)
+    return jsonify({'success': True})
+
+
+@user.route('/<string:username>/unfollow')
+@jwt_required
+def unfollow(username):
+    if g.user.username == username:
+        return jsonify({'error': 'User can\'t unfollow himself'})
+
+    datauser = mongo.User.find_one_or_404({'username': username})
+    g.user.remove_follower(datauser._id)
+    datauser.remove_following(datauser._id)
+    return jsonify({'success': True})
+

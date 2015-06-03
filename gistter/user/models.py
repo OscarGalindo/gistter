@@ -43,8 +43,8 @@ class User(Core):
         'tweets_count': int,
         'following_count': int,
         'followers_count': int,
-        'following_users': list,
-        'followers_users': list,
+        'following': list,
+        'followers': list,
         'favorites': list,
         'image_profile': basestring,
         'fullname': basestring
@@ -54,8 +54,8 @@ class User(Core):
         'tweets_count': 0,
         'followers_count': 0,
         'following_count': 0,
-        'following_users': [],
-        'followers_users': [],
+        'following': [],
+        'followers': [],
         'favorites': []
     }
 
@@ -85,6 +85,31 @@ class User(Core):
         self.lastname = data.get('lastname')
         self.fullname = '{name} {lastname}'.format(name=self.name, lastname=self.lastname)
         self.image_profile = gravatar(self.email)
+
+    def add_follower(self, id_follower):
+        if id_follower not in self.followers:
+            self.followers.append(id_follower)
+            self.folowers_count += 1
+            self.save()
+
+    def add_following(self, id_following):
+        if id_following not in self.following:
+            self.following.append(id_following)
+            self.following_count += 1
+            self.save()
+
+    def remove_follower(self, id_follower):
+        if id_follower in self.followers:
+            self.followers.remove(id_follower)
+            self.folowers_count -= 1
+            self.save()
+
+    def remove_following(self, id_following):
+        if id_following in self.following:
+            self.following.remove(id_following)
+            self.following_count -= 1
+            self.save()
+
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})
