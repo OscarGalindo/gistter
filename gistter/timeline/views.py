@@ -11,7 +11,7 @@ timeline = Blueprint('timeline', __name__)
 def index():
     tweets = mongo.Tweet.find({
         '$or': [
-            {'user.$id': {'$in': g.user.following_users}},
+            {'user.$id': {'$in': g.user.following}},
             {'user.$id': g.user._id}
         ]
     })

@@ -1,8 +1,10 @@
 from datetime import datetime
-from flask import url_for
 import re
+
+from flask import url_for
 from mongokit import ValidationError
 from werkzeug.security import generate_password_hash
+
 from gistter import mongo, gravatar
 from gistter.coremodel import Core
 
@@ -109,7 +111,6 @@ class User(Core):
             self.following.remove(id_following)
             self.following_count -= 1
             self.save()
-
 
     def get_absolute_url(self):
         return url_for('user.index', kwargs={"username": self.username})

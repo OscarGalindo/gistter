@@ -57,20 +57,8 @@ def update():
 def delete(username):
     return 'Deleted %s' % username
 
-@user.route('/<string:username>/follow')
-@jwt_required
-def follow(username):
-    if g.user.username == username:
-        return jsonify({'error': 'User can\'t follow himself'})
-
-    datauser = mongo.User.find_one_or_404({'username': username})
-    g.user.add_follower(datauser._id)
-    datauser.add_following(datauser._id)
-    return jsonify({'success': True})
-
-
 @user.route('/<string:username>/unfollow')
-@jwt_required
+@jwt_required()
 def unfollow(username):
     if g.user.username == username:
         return jsonify({'error': 'User can\'t unfollow himself'})
@@ -80,3 +68,13 @@ def unfollow(username):
     datauser.remove_following(datauser._id)
     return jsonify({'success': True})
 
+@user.route('/<string:username>/follow')
+@jwt_required()
+def follow(username):
+    if g.user.username == username:
+        return jsonify({'error': 'User can\'t follow himself'})
+
+    datauser = mongo.User.find_one_or_404({'username': username})
+    g.user.add_follower(datauser._id)
+    datauser.add_following(datauser._id)
+    return jsonify({'success': True})
