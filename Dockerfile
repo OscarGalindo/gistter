@@ -1,6 +1,11 @@
-################################
-# Dockerfile to deploy Gistter #
-################################
+######################################
+# Dockerfile to deploy Gistter 
+#
+# Build command:
+#  $ docker build -t gistter .
+#  $ docker run -p 5000:80 gistter
+#
+#####################################
 
 # Set the base image to Ubuntu
 FROM ubuntu:14.04
@@ -18,7 +23,7 @@ RUN apt-get install -y tar git curl nano wget dialog net-tools build-essential
 # Python
 RUN apt-get install -y python python-dev python-distribute python-pip
 
-# Clone the project into ~/backend
+# Clone the project into ~/gistter
 WORKDIR ~/gistter
 RUN git clone https://github.com/kaseOga/gistter .
 
